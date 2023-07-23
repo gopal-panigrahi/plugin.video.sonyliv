@@ -10,6 +10,7 @@ from codequick.script import Settings
 
 @Route.register
 def root(_):
+    yield Listitem.search(Route.ref("/resources/lib/main:list_tray"), url="search")
     yield from builder.buildMenu()
 
 
@@ -30,14 +31,19 @@ def list_page(_, **kwargs):
 
 @Route.register
 def list_tray(_, **kwargs):
-    if "uri" in kwargs:
-        tray = api.getTray(kwargs.get("uri"), kwargs["start"], kwargs["end"])
-        yield from builder.buildTray(tray.get("containers"))
-
-        kwargs["total"] = tray.get("total")
-        yield from builder.buildNavigations(**kwargs)
+    if kwargs.get("search_query", False):
+        keyword = kwargs.get("search_query")
+        items = api.getSearchResponse(keyword)
+        yield from builder.buildTray(items)
     else:
-        yield False
+        if "uri" in kwargs:
+            tray = api.getTray(kwargs.get("uri"), kwargs["start"], kwargs["end"])
+            yield from builder.buildTray(tray.get("containers"))
+
+            kwargs["total"] = tray.get("total")
+            yield from builder.buildNavigations(**kwargs)
+        else:
+            yield False
 
 
 @Route.register(redirect_single_item=True)

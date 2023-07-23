@@ -50,12 +50,12 @@ class Builder:
 
     def buildTray(self, tray):
         for each in tray:
-            contentType = deep_get(each, "metadata.contentSubtype")
+            contentType = deep_get(each, "metadata.objectSubtype")
 
             if contentType in ["SHOW", "EPISODIC_SHOW"]:
                 yield self.buildShow(each)
-            elif contentType in ["MOVIE", "TRAILER"]:
-                yield self.buildMovie(each)
+            elif contentType in ["MOVIE", "TRAILER", "EPISODE", "CLIP"]:
+                yield self.buildVideo(each)
 
     def buildShow(self, show):
         callback = Route.ref("/resources/lib/main:list_seasons")
@@ -79,27 +79,27 @@ class Builder:
         }
         return Listitem.from_dict(**item_data)
 
-    def buildMovie(self, movie):
-        premium = isPremium(movie)
+    def buildVideo(self, video):
+        premium = isPremium(video)
         item_data = {
             "callback": Resolver.ref("/resources/lib/main:play_video"),
-            "label": f'{deep_get(movie, "metadata.title")} {premium}',
+            "label": f'{deep_get(video, "metadata.title")} {premium}',
             "art": {
-                "thumb": getThumbnail(movie),
-                "fanart": getPoster(movie),
+                "thumb": getThumbnail(video),
+                "fanart": getPoster(video),
             },
             "info": {
-                "genre": deep_get(movie, "metadata.genres"),
-                "year": deep_get(movie, "metadata.emfAttributes.release_year"),
-                "plot": deep_get(movie, "metadata.longDescription"),
-                "plotoutline": deep_get(movie, "metadata.shortDescription"),
+                "genre": deep_get(video, "metadata.genres"),
+                "year": deep_get(video, "metadata.emfAttributes.release_year"),
+                "plot": deep_get(video, "metadata.longDescription"),
+                "plotoutline": deep_get(video, "metadata.shortDescription"),
             },
             "params": {
-                "video_id": movie.get("id"),
-                "label": deep_get(movie, "metadata.title"),
-                "video_value": deep_get(movie, "metadata.emfAttributes.value"),
+                "video_id": video.get("id"),
+                "label": deep_get(video, "metadata.title"),
+                "video_value": deep_get(video, "metadata.emfAttributes.value"),
                 "is_preview_enabled": deep_get(
-                    movie, "metadata.emfAttributes.is_preview_enabled"
+                    video, "metadata.emfAttributes.is_preview_enabled"
                 ),
             },
         }

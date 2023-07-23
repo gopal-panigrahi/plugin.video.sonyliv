@@ -54,6 +54,15 @@ class SonyLivAPI:
         ]
         return video_url, subtitles
 
+    def getSearchResponse(self, keyword):
+        url = updateQueryParams(URLS.get("SEARCH"), {"query": keyword})
+        url = url_constructor(url)
+        resp = self.get(url)
+        search_result = []
+        for item in deep_get(resp, "resultObj.containers")[0].get("containers"):
+            search_result.extend(item.get("assets"))
+        return search_result
+
     def get(self, url, **kwargs):
         try:
             response = self.session.get(url, **kwargs)

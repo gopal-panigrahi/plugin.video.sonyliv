@@ -31,6 +31,7 @@ URLS = {
     "TOKEN": "/AGL/1.4/A/ENG/WEB/ALL/GETTOKEN",
     "PAGE": "/AGL/2.6/A/ENG/WEB/IN/MH/PAGE/{page_id}?kids_safe=false",
     "TRAY": "/AGL/2.6/A/ENG/WEB/IN/MH",
+    "SEARCH": "/AGL/2.9/A/ENG/WEB/IN/MH/TRAY/SEARCH?from=0&to=12&app_version=3.10.3&kids_safe=false",
     "SHOW": "/AGL/2.4/A/ENG/WEB/IN/MH/DETAIL/{show_id}",
     "SEASON": "/AGL/2.6/A/ENG/WEB/IN/MH/CONTENT/DETAIL/BUNDLE/{season_id}?&kids_safe=false&orderBy=episodeNumber",
     "VIDEO": "/AGL/1.5/A/ENG/WEB/IN/CONTENT/VIDEOURL/VOD/{video_id}",
