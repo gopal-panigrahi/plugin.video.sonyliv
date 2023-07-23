@@ -10,6 +10,14 @@ def deep_get(dictionary, keys, default=None):
     )
 
 
+def isPremium(item):
+    video_value = deep_get(item, "metadata.emfAttributes.value")
+    is_preview_enabled = deep_get(item, "metadata.emfAttributes.is_preview_enabled")
+    if video_value != "Free" and not is_preview_enabled:
+        return "(Premium)"
+    return ""
+
+
 def updateQueryParams(url, params):
     url_parts = list(urlparse(url))
     query = dict(parse_qsl(url_parts[4]))

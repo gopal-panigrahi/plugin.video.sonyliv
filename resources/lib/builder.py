@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
-from resources.lib.utils import deep_get, getThumbnail, getPoster
+from resources.lib.utils import deep_get, getThumbnail, getPoster, isPremium
 from resources.lib.constants import CHANNELS, URLS
 from codequick import Listitem, Resolver, Route
 import inputstreamhelper
@@ -80,9 +80,10 @@ class Builder:
         return Listitem.from_dict(**item_data)
 
     def buildMovie(self, movie):
+        premium = isPremium(movie)
         item_data = {
             "callback": Resolver.ref("/resources/lib/main:play_video"),
-            "label": deep_get(movie, "metadata.title"),
+            "label": f'{deep_get(movie, "metadata.title")} {premium}',
             "art": {
                 "thumb": getThumbnail(movie),
                 "fanart": getPoster(movie),
@@ -97,6 +98,9 @@ class Builder:
                 "video_id": movie.get("id"),
                 "label": deep_get(movie, "metadata.title"),
                 "video_value": deep_get(movie, "metadata.emfAttributes.value"),
+                "is_preview_enabled": deep_get(
+                    movie, "metadata.emfAttributes.is_preview_enabled"
+                ),
             },
         }
         return Listitem.from_dict(**item_data)
@@ -118,9 +122,10 @@ class Builder:
 
     def buildEpisodes(self, episodes):
         for each in episodes:
+            premium = isPremium(each)
             item_data = {
                 "callback": Resolver.ref("/resources/lib/main:play_video"),
-                "label": f"Ep {deep_get(each, 'metadata.episodeNumber')}. {deep_get(each, 'metadata.episodeTitle')}",
+                "label": f"Ep {deep_get(each, 'metadata.episodeNumber')}. {deep_get(each, 'metadata.episodeTitle')} {premium}",
                 "art": {
                     "thumb": deep_get(each, "metadata.emfAttributes.thumbnail"),
                 },
@@ -143,6 +148,9 @@ class Builder:
                     "video_id": each.get("id"),
                     "label": deep_get(each, "metadata.episodeTitle"),
                     "video_value": deep_get(each, "metadata.emfAttributes.value"),
+                    "is_preview_enabled": deep_get(
+                        each, "metadata.emfAttributes.is_preview_enabled"
+                    ),
                 },
             }
             yield Listitem.from_dict(**item_data)

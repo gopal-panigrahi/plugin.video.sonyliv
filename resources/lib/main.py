@@ -77,6 +77,12 @@ def play_video(_, **kwargs):
         video_id = kwargs.get("video_id")
         label = kwargs.get("label")
         video_value = kwargs.get("video_value")
+        is_preview_enabled = kwargs.get("is_preview_enabled")
+
+        if video_value != "Free" and not is_preview_enabled:
+            Script.notify("Can't Play Premium", "")
+            return False
+
         playback_url, subtitles = api.getVideo(video_id, video_value)
         stream_headers = api._getPlayHeaders()
         return builder.buildPlay(playback_url, stream_headers, label, subtitles)
