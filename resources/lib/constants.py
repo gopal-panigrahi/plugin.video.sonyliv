@@ -19,12 +19,12 @@ BASE_HEADERS = {
 url_constructor = urljoin_partial(API_BASE_URL)
 
 CHANNELS = [
-    ("Home", "33958"),
-    ("TV Shows", "2240"),
-    ("New", "159701"),
-    ("Movies", "399"),
-    ("Originals", "5193"),
-    ("Watch free", "109623"),
+    ("Home", "33958", "home.png"),
+    ("TV Shows", "2240", "tv.png"),
+    ("New", "159701", "new.png"),
+    ("Movies", "399", "movies.png"),
+    ("Originals", "5193", "originals.png"),
+    ("Watch free", "109623", "free.png"),
 ]
 
 URLS = {

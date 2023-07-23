@@ -13,7 +13,7 @@ from uuid import uuid4
 
 class Builder:
     def buildMenu(self):
-        for channel_name, channel_id in CHANNELS:
+        for channel_name, channel_id, image in CHANNELS:
             item_data = {
                 "callback": Route.ref("/resources/lib/main:list_page"),
                 "label": channel_name,
@@ -24,7 +24,9 @@ class Builder:
                     "pageSize": 10,
                 },
             }
-            yield Listitem.from_dict(**item_data)
+            item = Listitem.from_dict(**item_data)
+            item.art.local_thumb(image)
+            yield item
 
     def buildPage(self, page):
         for each in page:
