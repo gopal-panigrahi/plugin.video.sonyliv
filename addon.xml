@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.video.sonyliv" version="1.0.0" name="SonyLIV" provider-name="Vàjrà">
+	<requires>
+		<import addon="xbmc.python" version="3.0.0" />
+		<import addon="script.module.codequick" version="1.0.3" />
+		<import addon="script.module.inputstreamhelper" version="0.6.1" />
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="addon.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>SonyLIV is a one stop destination for Audio/Video content from Sony Pictures Networks</summary>
+		<description>SonyLIV is the first premium Video on Demand (VOD) service by Sony Pictures Networks India Private Limited (SPN), providing multi-screen engagement to users on all devices.
+Launched in January 2013, it enables users to discover 20 years of rich content from the network channels of Sony Pictures Networks India Private Limited.
+		</description>
+		<platform>all</platform>
+		<website>https://www.sonyliv.com/</website>
+		<disclaimer>This 3rd party addon is not in any way commissioned or endorsed by Sony Pictures Networks India Pvt. Ltd.</disclaimer>
+		<assets>
+			<icon>icon.webp</icon>
+			<fanart>fanart.webp</fanart>
+			<screenshot>resources/media/screenshot-01.webp</screenshot>
+			<screenshot>resources/media/screenshot-02.webp</screenshot>
+			<screenshot>resources/media/screenshot-03.webp</screenshot>
+		</assets>
+	</extension>
+</addon>
