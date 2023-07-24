@@ -9,11 +9,11 @@ The trademark "Sony Liv" is registered by "Sony Pictures Networks India Private 
 
 Download the Repository zip file [Vajra Repository for Kodi - repository.vajra-1.0.0.zip](https://gopal-panigrahi.github.io/repository.vajra/repository.vajra-1.0.0.zip).
 
-Now open Kodi and in the Add-ons browser, choose Install from zip file
-Navigate in to the Home/downloads folder (or USB flash drive/memory card if you use an external device)
-then install the repository file repository.vajra-1.0.0.zip.
-Return to the add-ons browser and choose Install from repository
-then select Indian OTT and install Sony Liv add-on
+- Now open Kodi and in the Add-ons browser, choose Install from zip file
+- Navigate in to the Home/downloads folder (or USB flash drive/memory card if you use an external device)
+- then install the repository file repository.vajra-1.0.0.zip.
+- Return to the add-ons browser and choose Install from repository
+- then select Indian OTT and install Sony Liv add-on
 
 #### Alternative Way to Install Repository
 
