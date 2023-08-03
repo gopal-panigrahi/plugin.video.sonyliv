@@ -9,6 +9,7 @@ import inputstreamhelper
 from urllib.parse import urlencode
 import time
 from uuid import uuid4
+import xbmc
 
 
 class Builder:
@@ -123,6 +124,7 @@ class Builder:
             yield item
 
     def buildEpisodes(self, episodes):
+        playlist.clear()
         for each in episodes:
             premium = isPremium(each)
             item_data = {
@@ -155,7 +157,9 @@ class Builder:
                     ),
                 },
             }
-            yield Listitem.from_dict(**item_data)
+            item = Listitem.from_dict(**item_data)
+            playlist.add(item.listitem.getPath(), item.listitem, 0)
+            yield item
 
     def buildNavigations(self, **kwargs):
         if kwargs.get("end") < kwargs.get("total"):
@@ -188,3 +192,6 @@ class Builder:
                 "subtitles": subtitles,
             }
             yield Listitem(content_type="video").from_dict(**item_data)
+
+
+playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
