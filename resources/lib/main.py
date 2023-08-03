@@ -59,9 +59,7 @@ def list_seasons(_, **kwargs):
 @Route.register
 def list_episodes(_, **kwargs):
     if "id" in kwargs:
-        sort_order = "asc"
-        if Settings.get_boolean("sort_order"):
-            sort_order = "desc"
+        sort_order = "desc"
         rel_url = URLS.get("SEASON").format(season_id=kwargs.get("id"))
         start = kwargs.get("start", 0)
         end = kwargs.get("end", 14)
