@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 	<category label="General">
+		<setting id="quality" type="labelenum" label="Select Max Quality" default="720p" values="480p|640p|720p|1080p|2K|1440p|4K|Ask Quality" />
 		<setting id="cleanup" type="action" label="Clear Cache" action="RunPlugin(plugin://plugin.video.sonyliv/resources/lib/main/cleanup/)" option="close" />
 	</category>
 </settings>

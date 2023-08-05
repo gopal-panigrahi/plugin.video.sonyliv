@@ -5,6 +5,7 @@ from datetime import datetime
 from resources.lib.utils import deep_get, getThumbnail, getPoster, isPremium
 from resources.lib.constants import CHANNELS, URLS
 from codequick import Listitem, Resolver, Route
+from codequick.script import Settings
 import inputstreamhelper
 from urllib.parse import urlencode
 import time
@@ -176,6 +177,13 @@ class Builder:
             }
         )
 
+        if Settings.get_string("quality") == "Ask Quality":
+            stream_selection_type = "ask-quality"
+            resolution = ""
+        else:
+            stream_selection_type = "adaptive"
+            resolution = Settings.get_string("quality")
+
         if is_helper.check_inputstream():
             item_data = {
                 "callback": playback_url,
@@ -185,6 +193,9 @@ class Builder:
                     "inputstream": is_helper.inputstream_addon,
                     "inputstream.adaptive.manifest_type": "mpd",
                     "inputstream.adaptive.license_type": False,
+                    "inputstream.adaptive.stream_selection_type": stream_selection_type,
+                    "inputstream.adaptive.chooser_resolution_max": resolution,
+                    "inputstream.adaptive.chooser_resolution_secure_max": resolution,
                     "inputstream.adaptive.stream_headers": urlencode(stream_headers),
                     "inputstream.adaptive.license_key": "|%s|R{SSM}|"
                     % urlencode(stream_headers),
