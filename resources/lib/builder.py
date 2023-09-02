@@ -32,13 +32,14 @@ class Builder:
 
     def buildPage(self, page):
         for each in page:
-            if each.get("layout") == "portrait_layout":
+            containers = deep_get(each, "assets.containers")
+            if each.get("layout") == "portrait_layout" and len(containers) > 0:
                 item_data = {
                     "callback": Route.ref("/resources/lib/main:list_tray"),
                     "label": deep_get(each, "metadata.label"),
                     "art": {
-                        "thumb": getThumbnail(deep_get(each, "assets.containers")[0]),
-                        "fanart": getPoster(deep_get(each, "assets.containers")[0]),
+                        "thumb": getThumbnail(containers[0]),
+                        "fanart": getPoster(containers[0]),
                     },
                     "info": {
                         "plot": deep_get(each, "metadata.listing_page_footer_desc"),
