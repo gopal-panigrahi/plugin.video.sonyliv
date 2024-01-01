@@ -10,7 +10,7 @@ def deep_get(dictionary, keys, default=None):
     )
 
 
-def isPremium(item):
+def is_premium(item):
     video_value = deep_get(item, "metadata.emfAttributes.value")
     is_preview_enabled = deep_get(item, "metadata.emfAttributes.is_preview_enabled")
     if video_value != "Free" and not is_preview_enabled:
@@ -18,7 +18,7 @@ def isPremium(item):
     return ""
 
 
-def updateQueryParams(url, params):
+def update_query_params(url, params):
     url_parts = list(urlparse(url))
     query = dict(parse_qsl(url_parts[4]))
     query.update(params)
@@ -26,7 +26,7 @@ def updateQueryParams(url, params):
     return urlunparse(url_parts)
 
 
-def getThumbnail(item):
+def get_thumbnail(item):
     images = [
         "square_thumb",
         "circular_image",
@@ -39,10 +39,10 @@ def getThumbnail(item):
         img_url = deep_get(item, f"metadata.emfAttributes.{image}")
         if img_url:
             return img_url
-    return getPoster(item)
+    return get_poster(item)
 
 
-def getPoster(item):
+def get_poster(item):
     images = [
         "landscape_thumb",
         "thumbnail",

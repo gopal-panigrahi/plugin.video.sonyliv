@@ -11,7 +11,7 @@ from codequick.script import Settings
 @Route.register
 def root(_):
     yield Listitem.search(Route.ref("/resources/lib/main:list_tray"), url="search")
-    yield from builder.buildMenu()
+    yield from builder.build_menu()
 
 
 @Route.register
@@ -19,12 +19,12 @@ def list_page(_, **kwargs):
     if "id" in kwargs:
         rel_url = URLS.get("PAGE").format(page_id=kwargs.get("id"))
         while True:
-            page = api.getPage(rel_url, kwargs["start"], kwargs["end"])
+            page = api.get_page(rel_url, kwargs["start"], kwargs["end"])
             if len(page.get("containers")) == 0:
                 break
             kwargs["start"] += kwargs["pageSize"]
             kwargs["end"] += kwargs["pageSize"]
-            yield from builder.buildPage(page.get("containers"))
+            yield from builder.build_page(page.get("containers"))
     else:
         yield False
 
@@ -33,15 +33,15 @@ def list_page(_, **kwargs):
 def list_tray(_, **kwargs):
     if kwargs.get("search_query", False):
         keyword = kwargs.get("search_query")
-        items = api.getSearchResponse(keyword)
-        yield from builder.buildTray(items)
+        items = api.get_search_response(keyword)
+        yield from builder.build_tray(items)
     else:
         if "uri" in kwargs:
-            tray = api.getTray(kwargs.get("uri"), kwargs["start"], kwargs["end"])
-            yield from builder.buildTray(tray.get("containers"))
+            tray = api.get_tray(kwargs.get("uri"), kwargs["start"], kwargs["end"])
+            yield from builder.build_tray(tray.get("containers"))
 
             kwargs["total"] = tray.get("total")
-            yield from builder.buildNavigations(**kwargs)
+            yield from builder.build_navigations(**kwargs)
         else:
             yield False
 
@@ -50,8 +50,8 @@ def list_tray(_, **kwargs):
 def list_seasons(_, **kwargs):
     if "id" in kwargs:
         rel_url = URLS.get("SHOW").format(show_id=kwargs.get("id"))
-        seasons = api.getSeasons(rel_url).get("containers")
-        yield from builder.buildSeasons(seasons)
+        seasons = api.get_seasons(rel_url).get("containers")
+        yield from builder.build_seasons(seasons)
     else:
         yield False
 
@@ -63,14 +63,14 @@ def list_episodes(_, **kwargs):
         rel_url = URLS.get("SEASON").format(season_id=kwargs.get("id"))
         start = kwargs.get("start", 0)
         end = kwargs.get("end", 14)
-        episodes = api.getEpisodes(rel_url, start, end, sort_order)
+        episodes = api.get_episodes(rel_url, start, end, sort_order)
         total = episodes.get("total")
         episodeCount = episodes.get("episodeCount")
         if total == 15 and ((start + 15) < episodeCount):
             yield Listitem().next_page(
                 **{"id": kwargs.get("id"), "start": start + 15, "end": end + 15}
             )
-        yield from builder.buildEpisodes(episodes.get("containers"))
+        yield from builder.build_episodes(episodes.get("containers"))
     else:
         yield False
 
@@ -87,9 +87,9 @@ def play_video(_, **kwargs):
             Script.notify("Can't Play Premium", "")
             return False
 
-        playback_url, subtitles = api.getVideo(video_id, video_value)
-        stream_headers = api._getPlayHeaders()
-        return builder.buildPlay(playback_url, stream_headers, label, subtitles)
+        playback_url, subtitles = api.get_video(video_id, video_value)
+        stream_headers = api._get_play_headers()
+        return builder.build_play(playback_url, stream_headers, label, subtitles)
 
 
 @Script.register

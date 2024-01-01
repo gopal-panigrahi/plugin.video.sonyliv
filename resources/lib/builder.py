@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
-from resources.lib.utils import deep_get, getThumbnail, getPoster, isPremium
+from resources.lib.utils import deep_get, get_thumbnail, get_poster, is_premium
 from resources.lib.constants import CHANNELS, URLS
 from codequick import Listitem, Resolver, Route
 import inputstreamhelper
@@ -13,7 +13,7 @@ import xbmc
 
 
 class Builder:
-    def buildMenu(self):
+    def build_menu(self):
         for channel_name, channel_id, image in CHANNELS:
             item_data = {
                 "callback": Route.ref("/resources/lib/main:list_page"),
@@ -29,7 +29,7 @@ class Builder:
             item.art.local_thumb(image)
             yield item
 
-    def buildPage(self, page):
+    def build_page(self, page):
         for each in page:
             containers = deep_get(each, "assets.containers")
             if each.get("layout") == "portrait_layout" and len(containers) > 0:
@@ -37,8 +37,8 @@ class Builder:
                     "callback": Route.ref("/resources/lib/main:list_tray"),
                     "label": deep_get(each, "metadata.label"),
                     "art": {
-                        "thumb": getThumbnail(containers[0]),
-                        "fanart": getPoster(containers[0]),
+                        "thumb": get_thumbnail(containers[0]),
+                        "fanart": get_poster(containers[0]),
                     },
                     "info": {
                         "plot": deep_get(each, "metadata.listing_page_footer_desc"),
@@ -52,16 +52,16 @@ class Builder:
                 }
                 yield Listitem.from_dict(**item_data)
 
-    def buildTray(self, tray):
+    def build_tray(self, tray):
         for each in tray:
             contentType = deep_get(each, "metadata.objectSubtype")
 
             if contentType in ["SHOW", "EPISODIC_SHOW"]:
-                yield self.buildShow(each)
+                yield self.build_show(each)
             elif contentType in ["MOVIE", "TRAILER", "EPISODE", "CLIP"]:
-                yield self.buildVideo(each)
+                yield self.build_video(each)
 
-    def buildShow(self, show):
+    def build_show(self, show):
         callback = Route.ref("/resources/lib/main:list_seasons")
         if deep_get(show, "metadata.contentSubtype") == "EPISODIC_SHOW":
             callback = Route.ref("/resources/lib/main:list_episodes")
@@ -70,8 +70,8 @@ class Builder:
             "callback": callback,
             "label": deep_get(show, "metadata.title"),
             "art": {
-                "thumb": getThumbnail(show),
-                "fanart": getPoster(show),
+                "thumb": get_thumbnail(show),
+                "fanart": get_poster(show),
             },
             "info": {
                 "genre": deep_get(show, "metadata.genres"),
@@ -83,14 +83,14 @@ class Builder:
         }
         return Listitem.from_dict(**item_data)
 
-    def buildVideo(self, video):
-        premium = isPremium(video)
+    def build_video(self, video):
+        premium = is_premium(video)
         item_data = {
             "callback": Resolver.ref("/resources/lib/main:play_video"),
             "label": f'{deep_get(video, "metadata.title")} {premium}',
             "art": {
-                "thumb": getThumbnail(video),
-                "fanart": getPoster(video),
+                "thumb": get_thumbnail(video),
+                "fanart": get_poster(video),
             },
             "info": {
                 "genre": deep_get(video, "metadata.genres"),
@@ -109,7 +109,7 @@ class Builder:
         }
         return Listitem.from_dict(**item_data)
 
-    def buildSeasons(self, seasons):
+    def build_seasons(self, seasons):
         for each in seasons[::-1]:
             item_data = {
                 "callback": Route.ref("/resources/lib/main:list_episodes"),
@@ -124,10 +124,10 @@ class Builder:
             item.art.local_thumb("season.png")
             yield item
 
-    def buildEpisodes(self, episodes):
+    def build_episodes(self, episodes):
         playlist.clear()
         for each in episodes:
-            premium = isPremium(each)
+            premium = is_premium(each)
             item_data = {
                 "callback": Resolver.ref("/resources/lib/main:play_video"),
                 "label": f"Ep {deep_get(each, 'metadata.episodeNumber')}. {deep_get(each, 'metadata.episodeTitle')} {premium}",
@@ -162,13 +162,13 @@ class Builder:
             playlist.add(item.listitem.getPath(), item.listitem, 0)
             yield item
 
-    def buildNavigations(self, **kwargs):
+    def build_navigations(self, **kwargs):
         if kwargs.get("end") < kwargs.get("total"):
             kwargs["start"] += kwargs.get("pageSize")
             kwargs["end"] += kwargs.get("pageSize")
             yield Listitem().next_page(**kwargs)
 
-    def buildPlay(self, playback_url, stream_headers, label, subtitles):
+    def build_play(self, playback_url, stream_headers, label, subtitles):
         is_helper = inputstreamhelper.Helper("mpd", drm=False)
         stream_headers.update(
             {
