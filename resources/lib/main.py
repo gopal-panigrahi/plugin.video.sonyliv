@@ -63,11 +63,17 @@ def list_episodes(_, **kwargs):
         rel_url = URLS.get("SEASON").format(season_id=kwargs.get("id"))
         episodes = api.get_episodes(rel_url, kwargs["start"], kwargs["end"], sort_order)
         kwargs["total"] = episodes.get("episodeCount")
+        yield from builder.build_all_pages(**kwargs)
+        yield from builder.build_episodes(episodes.get("containers"))
         yield from builder.build_next(**kwargs)
         yield from builder.build_prev(**kwargs)
-        yield from builder.build_episodes(episodes.get("containers"))
     else:
         yield False
+
+
+@Route.register
+def list_pages(_, **kwargs):
+    yield from builder.build_page_list(**kwargs)
 
 
 @Resolver.register

@@ -172,6 +172,31 @@ class Builder:
             playlist.add(item.listitem.getPath(), item.listitem, 0)
             yield item
 
+    def build_all_pages(self, **kwargs):
+        item_info = {
+            "callback": Route.ref("/resources/lib/main:list_pages"),
+            "label": "All Pages",
+            "info": {"plot": "All Pages"},
+            "params": {**kwargs},
+        }
+        item = Listitem.from_dict(**item_info)
+        item.art.global_thumb("playlist.png")
+        yield item
+
+    def build_page_list(self, **kwargs):
+        pages = kwargs.get("total") // kwargs.get("pageSize")
+        for page in range(pages + 1):
+            kwargs["start"] = page * kwargs.get("pageSize")
+            kwargs["end"] = (page + 1) * kwargs.get("pageSize") - 1
+            item_info = {
+                "callback": Route.ref("/resources/lib/main:list_episodes"),
+                "label": f'Page {page + 1} (From {kwargs["start"] + 1}-{kwargs["end"] + 1})',
+                "params": {**kwargs},
+            }
+            item = Listitem.from_dict(**item_info)
+            item.art.global_thumb("playlist.png")
+            yield item
+
     def build_next(self, **kwargs):
         if kwargs.get("end") < kwargs.get("total"):
             kwargs["start"] += kwargs.get("pageSize")
