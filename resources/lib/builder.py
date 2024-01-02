@@ -79,7 +79,12 @@ class Builder:
                 "plot": deep_get(show, "metadata.longDescription"),
                 "plotoutline": deep_get(show, "metadata.shortDescription"),
             },
-            "params": {"id": show.get("id")},
+            "params": {
+                "id": show.get("id"),
+                "start": 0,
+                "end": 14,
+                "pageSize": 15,
+            },
         }
         return Listitem.from_dict(**item_data)
 
@@ -118,7 +123,12 @@ class Builder:
                     "thumb": "",
                     "fanart": "",
                 },
-                "params": {"id": each.get("id")},
+                "params": {
+                    "id": each.get("id"),
+                    "start": 0,
+                    "end": 14,
+                    "pageSize": 15,
+                },
             }
             item = Listitem.from_dict(**item_data)
             item.art.local_thumb("season.png")
@@ -162,11 +172,23 @@ class Builder:
             playlist.add(item.listitem.getPath(), item.listitem, 0)
             yield item
 
-    def build_navigations(self, **kwargs):
+    def build_next(self, **kwargs):
         if kwargs.get("end") < kwargs.get("total"):
             kwargs["start"] += kwargs.get("pageSize")
             kwargs["end"] += kwargs.get("pageSize")
-            yield Listitem().next_page(**kwargs)
+            item = Listitem().next_page(**kwargs)
+            item.label = "Next page"
+            yield item
+
+    def build_prev(self, **kwargs):
+        if kwargs.get("start") >= kwargs.get("pageSize"):
+            kwargs["start"] -= kwargs.get("pageSize")
+            kwargs["end"] -= kwargs.get("pageSize")
+            item = Listitem.next_page(**kwargs)
+            item.label = "Prev page"
+            item.art.local_thumb("prev.png")
+            item.info.plot = "Show the prev page of content"
+            yield item
 
     def build_play(self, playback_url, stream_headers, label, subtitles):
         is_helper = inputstreamhelper.Helper("mpd", drm=False)

@@ -5,7 +5,6 @@ from resources.lib.api import SonyLivAPI
 from resources.lib.builder import Builder
 import urlquick
 from codequick import Route, run, Script, Resolver, Listitem
-from codequick.script import Settings
 
 
 @Route.register
@@ -41,7 +40,8 @@ def list_tray(_, **kwargs):
             yield from builder.build_tray(tray.get("containers"))
 
             kwargs["total"] = tray.get("total")
-            yield from builder.build_navigations(**kwargs)
+            yield from builder.build_next(**kwargs)
+            yield from builder.build_prev(**kwargs)
         else:
             yield False
 
@@ -61,15 +61,10 @@ def list_episodes(_, **kwargs):
     if "id" in kwargs:
         sort_order = "desc"
         rel_url = URLS.get("SEASON").format(season_id=kwargs.get("id"))
-        start = kwargs.get("start", 0)
-        end = kwargs.get("end", 14)
-        episodes = api.get_episodes(rel_url, start, end, sort_order)
-        total = episodes.get("total")
-        episodeCount = episodes.get("episodeCount")
-        if total == 15 and ((start + 15) < episodeCount):
-            yield Listitem().next_page(
-                **{"id": kwargs.get("id"), "start": start + 15, "end": end + 15}
-            )
+        episodes = api.get_episodes(rel_url, kwargs["start"], kwargs["end"], sort_order)
+        kwargs["total"] = episodes.get("episodeCount")
+        yield from builder.build_next(**kwargs)
+        yield from builder.build_prev(**kwargs)
         yield from builder.build_episodes(episodes.get("containers"))
     else:
         yield False
