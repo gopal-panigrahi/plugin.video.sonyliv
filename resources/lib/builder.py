@@ -190,7 +190,7 @@ class Builder:
             kwargs["end"] = (page + 1) * kwargs.get("pageSize") - 1
             item_info = {
                 "callback": Route.ref("/resources/lib/main:list_episodes"),
-                "label": f'Page {page + 1} (From {kwargs["start"] + 1}-{kwargs["end"] + 1})',
+                "label": f"Page {page + 1}",
                 "params": {**kwargs},
             }
             item = Listitem.from_dict(**item_info)
