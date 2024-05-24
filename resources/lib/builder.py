@@ -198,6 +198,7 @@ class Builder:
                     "inputstream.adaptive.chooser_resolution_max": resolution,
                     "inputstream.adaptive.chooser_resolution_secure_max": resolution,
                     "inputstream.adaptive.stream_headers": urlencode(stream_headers),
+                    "inputstream.adaptive.manifest_headers": urlencode(stream_headers),
                     "inputstream.adaptive.license_key": "|%s|R{SSM}|"
                     % urlencode(stream_headers),
                 },
